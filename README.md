@@ -1,17 +1,23 @@
-# Otonom Engel Tespiti ve Kaçınma Sistemi
+# ROS2 Otonom Engel Kaçınma Sistemi (obs_avo_ws)
 
 ## Proje Açıklaması
-Bu ROS2 paketi, Lidar sensörü kullanarak otonom engel tespiti ve kaçınma sistemi sağlar. Robot, önündeki engelleri algılayarak çarpışmadan hareket edebilir.
+ROS2 Humble ve TurtleBot3 kullanarak geliştirilen otonom engel tespiti ve kaçınma sistemi. Proje, Lidar sensörü ile gerçek zamanlı engel algılama ve otomatik yön değiştirme stratejisi içerir.
+
+## Özellikler
+- Lidar sensörü ile gerçek zamanlı engel tespiti
+- Otomatik yön değiştirme algoritması
+- Gazebo simülasyon desteği
+- TurtleBot3 uyumlu
 
 ## Gereksinimler
 - ROS2 Humble
-- Gazebo
 - TurtleBot3 paketleri
+- Gazebo
 - Python 3.10+
 
-## Ön Hazırlık
+## Kurulum
 
-### Gerekli Paketlerin Kurulumu
+### 1. Gerekli Paketlerin Kurulumu
 ```bash
 sudo apt update
 sudo apt install ros-humble-gazebo-ros-pkgs
@@ -19,77 +25,41 @@ sudo apt install ros-humble-turtlebot3-gazebo
 sudo apt install ros-humble-turtlebot3-description
 ```
 
-### Ortam Değişkenlerini Ayarlama
+### 2. Ortam Değişkenlerini Ayarlama
 ```bash
-# TurtleBot3 modelini ayarla
 echo 'export TURTLEBOT3_MODEL=burger' >> ~/.bashrc
-
-# ROS Domain ID'sini ayarla (çakışmaları önlemek için)
-echo 'export ROS_DOMAIN_ID=42' >> ~/.bashrc
-
-# Gazebo kaynak dosyasını güncelle
-echo 'source /usr/share/gazebo/setup.sh' >> ~/.bashrc
-
 source ~/.bashrc
 ```
 
-## Kurulum
-1. ROS2 workspace'inizde klonlayın
+### 3. Projeyi Klonlama
 ```bash
-cd ~/ros2_ws/src
-git clone <repository_url>
+git clone https://github.com/ustad/obs_avo_ws.git
+cd obs_avo_ws
 ```
 
-2. Bağımlılıkları yükleyin
+### 4. Bağımlılıkları Yükleme
 ```bash
-cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-3. Paketi derleyin
+### 5. Projeyi Derleme
 ```bash
 colcon build --packages-select obstacle_avoidance
 source install/setup.bash
 ```
 
-## Çalıştırma
-### Gazebo Simülasyonunda Çalıştırma
+## Simülasyon Çalıştırma
+
+### Gazebo ve TurtleBot3 Dünyasını Başlatma
 ```bash
-# Gazebo simülasyonunu başlat
+ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py
+```
+
+### Engel Kaçınma Düğümlerini Çalıştırma
+Ayrı bir terminalde:
+```bash
 ros2 launch obstacle_avoidance gazebo_simulation_launch.py
 ```
-
-### Manuel Düğüm Çalıştırma
-```bash
-# Ayrı ayrı düğümleri çalıştırma
-ros2 run obstacle_avoidance lidar_node
-ros2 run obstacle_avoidance obstacle_avoidance_node
-```
-
-## Sorun Giderme
-
-### Yaygın Sorunlar ve Çözümleri
-
-#### Lidar Verisi Alınamıyor
-- ROS topic'lerini kontrol edin:
-  ```bash
-  ros2 topic list
-  ros2 topic echo /scan
-  ```
-
-#### Gazebo Spawn Hatası
-- URDF dosyasının doğru yolda olduğundan emin olun
-- Gazebo ve ROS2 sürümlerinin uyumlu olup olmadığını kontrol edin
-
-#### ROS Domain ID Çakışmaları
-- Her bir makinede farklı ROS_DOMAIN_ID kullanın
-- Ağ üzerinden iletişim sorunlarını çözün
-
-### Log Dosyaları
-- Detaylı log bilgileri için:
-  ```bash
-  ros2 run rqt_console rqt_console
-  ```
 
 ## Düğümler
 - `lidar_node`: Lidar verilerini işler
@@ -100,8 +70,18 @@ Engel algılama parametreleri düğüm içinde ayarlanabilir:
 - `min_obstacle_distance`: Minimum engel mesafesi (default: 0.5m)
 - `obstacle_angle_range`: Engel tarama açısı (default: 30 derece)
 
+## Sorun Giderme
+- Lidar verisi kontrolü:
+  ```bash
+  ros2 topic list
+  ros2 topic echo /scan
+  ```
+
+## Katkıda Bulunma
+Pull request'ler ve hata bildirimleri memnuniyetle karşılanır.
+
 ## Lisans
 MIT Lisansı
 
-## Katkıda Bulunma
-Hata bildirimleri ve pull request'ler memnuniyetle karşılanır.
+## İletişim
+Proje sahibi: [GitHub Profili](https://github.com/ustad)
